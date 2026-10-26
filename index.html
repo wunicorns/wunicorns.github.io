@@ -1,23 +1,592 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="icon" href="/favicon.png">
-    <title>mkmobile</title>
+<html lang="ko" data-at-theme="paper">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Agent Engineering 2026</title>
+<meta name="description" content="LLM 구조·하네스·서브에이전트·루프 엔지니어링 — 2026 AI 시스템 설계 노트. aive template Editorial Mono.">
+<link rel="icon" href="/favicon.ico">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
+/* colors.css */
+/* aive template v4.3 · Editorial Mono */
+:root {
+  /* surface — paper */
+  --at-bg: #FFFFFF;
+  --at-panel: #FFFFFF;
+  --at-sub: #F4F4F4;
+  --at-line: #E4E4E4;
+  --at-line-strong: #D4D4D4;
+  --at-line-soft: #EFEFEF;
 
-    <!--  Fonts and icons     -->
-    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
-    <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
-    <link href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
-  <link href="/js/app.js" rel="preload" as="script"><link href="/js/chunk-vendors.js" rel="preload" as="script"></head>
-  <body>
-    <noscript>
-      <strong>We're sorry but vue-material-kit doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
-    </noscript>
-    <div id="app"></div>
-    <!-- built files will be auto injected -->
-  <script type="text/javascript" src="/js/chunk-vendors.js"></script><script type="text/javascript" src="/js/app.js"></script></body>
+  /* inverse — ink sections */
+  --at-inverse: #0A0A0A;
+  --at-inverse-sub: #161616;
+  --at-inverse-line: #2B2B2B;
+  --at-inverse-body: #A3A3A3;
+  --at-inverse-ink: #FFFFFF;
+
+  /* ink */
+  --at-ink: #0A0A0A;
+  --at-ink-strong: #1F1F1F;
+  --at-body: #474747;
+  --at-label: #6E6E6E;
+  --at-muted: #8C8C8C;
+  --at-disabled: #BDBDBD;
+
+  /* action — black */
+  --at-on-primary: #FFFFFF;      /* v4.2: 액션 위 글자. Ink 팔레트에서 반전 */
+  --at-primary: #0A0A0A;
+  --at-primary-bg: #F4F4F4;
+  --at-primary-mid: #BDBDBD;
+  --at-navy: #333333;
+
+  /* signal — the only hue, ≤2% of a screen */
+  --at-signal: #1C63CD;
+  --at-signal-bg: #E8EFFA;
+
+  /* status */
+  --at-success: #5CBC73;
+  --at-success-text: #2E8B48;
+  --at-success-bg: #E6FCEB;
+  --at-warning: #EDC846;
+  --at-warning-text: #A37A0A;
+  --at-warning-bg: #FFF9EA;
+  --at-danger: #DC362E;
+  --at-danger-text: #DC362E;
+  --at-danger-bg: #FFEEED;
+
+  /* semantic aliases */
+  --at-surface-app: var(--at-bg);
+  --at-surface-card: var(--at-panel);
+  --at-surface-subtle: var(--at-sub);
+  --at-surface-inverse: var(--at-inverse);
+  --at-text-title: var(--at-ink);
+  --at-text-body: var(--at-body);
+  --at-text-muted: var(--at-muted);
+  --at-border-default: var(--at-line);
+  --at-border-control: var(--at-line-strong);
+  --at-action: var(--at-primary);
+  --at-action-hover: var(--at-navy);
+  --at-action-subtle: var(--at-primary-bg);
+  --at-focus: var(--at-signal);
+  --at-focus-ring: 0 0 0 2px var(--at-bg), 0 0 0 4px var(--at-signal);
+  /* v4.3 별칭 보강 */
+  --at-text-strong: var(--at-ink-strong);
+  --at-text-label: var(--at-label);
+  --at-text-disabled: var(--at-disabled);
+  --at-border-soft: var(--at-line-soft);
+  --at-action-mid: var(--at-primary-mid);
+  --at-text-on-action: var(--at-on-primary);
+}
+
+/* spacing.css */
+:root {
+  /* named scale */
+  --at-space-small: 4px;
+  --at-space-medium: 8px;
+  --at-space-standard: 16px;
+  /* secondary */
+  --at-space-24: 24px;
+  --at-space-32: 32px;
+  --at-space-48: 48px;
+  --at-space-section: 160px;   /* between editorial sections */
+  --at-gutter: 40px;           /* page side margin */
+  /* v4.3 역할 패딩 (컨트롤 내부) */
+  --at-pad-input: 10px;
+  --at-pad-button: 12px;
+  --at-pad-panel: 14px;
+  --at-gap-inline: 6px;
+
+  /* radius — hairline boxes are square, actions are pills */
+  --at-radius-badge: 2px;
+  --at-radius-control: 999px;
+  --at-radius-box: 0;
+  --at-radius-panel: 0;
+  --at-radius-media: 8px;
+  --at-radius-full: 999px;
+
+  /* fixed geometry */
+  --at-gnb-height: 64px;
+  --at-snb-width: 240px;
+  --at-control-height: 32px;
+  --at-control-height-sm: 26px;
+  --at-control-height-lg: 48px;
+  --at-canvas-width: 1920px;
+  --at-canvas-height: 1080px;
+
+  /* motion */
+  --at-motion: 200ms;
+  --at-easing: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --at-transition: 200ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  --at-reveal: 800ms cubic-bezier(0.16, 1, 0.3, 1);
+  --at-media-hover: 700ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* typography.css */
+:root {
+  /* Archivo = Latin display/UI, Pretendard = Hangul, JetBrains Mono = meta */
+  --at-font-display: 'Archivo', 'Pretendard Variable', Pretendard, system-ui, sans-serif;
+  --at-font-sans: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --at-font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --at-weight-medium: 500;
+  --at-weight-bold: 700;
+  --at-weight-display: 800;
+  --at-weight-label: 500;
+
+  /* Mega 200 / 0.86 / 800 / -0.045em — hero, footer only */
+  --at-size-mega: 200px;
+  --at-line-mega: 0.86;
+  --at-tracking-mega: -0.045em;
+
+  /* Display 96 / 0.92 / 800 / -0.04em — section heads */
+  --at-size-display: 96px;
+  --at-line-display: 0.92;
+  --at-tracking-display: -0.04em;
+
+  /* Headline 56 / 1.0 / 800 / -0.03em */
+  --at-size-headline: 56px;
+  --at-line-headline: 1.0;
+  --at-tracking-headline: -0.03em;
+
+  /* Title 28 / 1.2 / 700 / -0.02em */
+  --at-size-title: 28px;
+  --at-line-title: 1.2;
+  --at-tracking-title: -0.02em;
+
+  /* Subtitle 18 / 1.45 / 700 / -0.01em */
+  --at-size-subtitle: 18px;
+  --at-line-subtitle: 1.45;
+  --at-tracking-subtitle: -0.01em;
+
+  /* Value 15 / 22px / 700 */
+  --at-size-value: 15px;
+  --at-line-value: 22px;
+  --at-tracking-value: 0;
+  --at-size-unit: 13px;
+
+  /* Body 15 / 1.7 / 500 */
+  --at-size-body: 15px;
+  --at-line-body: 1.7;
+  --at-measure-body: 64ch;
+
+  /* Table 13 / 18px / 500 */
+  --at-size-table: 13px;
+  --at-line-table: 18px;
+
+  /* Label — mono 11 / 14px / 500 / 0.06em uppercase */
+  --at-size-label: 11px;
+  --at-line-label: 14px;
+  --at-tracking-label: 0.06em;
+
+  --at-size-control: 13px;
+}
+
+/* elevation.css */
+/* No soft shadows. Structure comes from 1px hairlines. */
+:root {
+  --at-shadow-panel: 0 0 0 1px #E4E4E4;
+  --at-shadow-inset: inset 0 0 0 1px #E4E4E4;
+  --at-shadow-popover: 0 0 0 1px #0A0A0A, 0 16px 40px rgba(0, 0, 0, 0.12);
+  --at-shadow-selected: 0 0 0 1.5px #0A0A0A;
+  --at-shadow-knob: 0 1px 2px rgba(0, 0, 0, 0.20);
+}
+
+/* themes.css */
+/* A · Paper — default, declared in colors.css */
+
+/* B · Ink — v4.3: 제거됨. Ink = data-clr="CLR-03" (palettes.css). */
+
+/* C · Calm — legacy v3 (admin screens migrating from earlier versions) */
+[data-at-theme="calm"] {
+  --at-on-primary: #FFFFFF;
+  --at-bg: #F3F5F7;
+  --at-sub: #FAFAFA;
+  --at-line: #E8E8E8;
+  --at-line-strong: #DFDFDF;
+  --at-ink: #000000;
+  --at-body: #555555;
+  --at-primary: #1C63CD;
+  --at-primary-bg: #E8EFFA;
+  --at-primary-mid: #A4C1EB;
+  --at-navy: #053266;
+  --at-radius-panel: 16px;
+  --at-radius-control: 8px;
+  --at-shadow-panel: 0 0 0 1px #E8E8E8, 0 1px 3px rgba(35, 55, 106, 0.06);
+}
+
+/* palettes.css */
+/* aive template · CLR palettes
+ * Each block is self-contained: it only (re)declares semantic tokens.
+ * Frames and blocks read var(--at-*) only — never hex — so any palette applies to any frame.
+ * Extend: append a new [data-clr="CLR-xx"] block (or a new file). Never edit an existing block.
+ * Scope: [data-clr] root, optionally [data-clr] > [data-slot="…"] for regional tone.
+ */
+
+/* CLR-01 · Paper */
+[data-clr="CLR-01"] {
+  --at-bg: #FFFFFF; --at-panel: #FFFFFF; --at-sub: #F4F4F4;
+  --at-line: #E4E4E4; --at-line-strong: #D4D4D4; --at-line-soft: #EFEFEF;
+  --at-ink: #0A0A0A; --at-body: #474747; --at-label: #6E6E6E; --at-muted: #8C8C8C; --at-disabled: #BDBDBD;
+  --at-primary: #0A0A0A; --at-on-primary: #FFFFFF; --at-navy: #333333; --at-primary-bg: #F4F4F4;
+  --at-signal: #1C63CD; --at-signal-bg: #E8EFFA;
+  --at-radius-panel: 0; --at-radius-control: 999px;
+}
+
+/* CLR-02 · Paper · Sub — nav / aside / hero on #F4F4F4 */
+[data-clr="CLR-02"] {
+  --at-bg: #FFFFFF; --at-panel: #FFFFFF; --at-sub: #F4F4F4;
+  --at-line: #E4E4E4; --at-line-strong: #D4D4D4; --at-line-soft: #EFEFEF;
+  --at-ink: #0A0A0A; --at-body: #474747; --at-label: #6E6E6E; --at-muted: #8C8C8C; --at-disabled: #BDBDBD;
+  --at-primary: #0A0A0A; --at-on-primary: #FFFFFF; --at-navy: #333333; --at-primary-bg: #F4F4F4;
+  --at-signal: #1C63CD; --at-signal-bg: #E8EFFA;
+  --at-radius-panel: 0; --at-radius-control: 999px;
+}
+[data-clr="CLR-02"] > [data-slot="nav"],
+[data-clr="CLR-02"] > [data-slot="aside"],
+[data-clr="CLR-02"] > [data-slot="hero"] {
+  --at-bg: #F4F4F4; --at-panel: #FFFFFF; --at-sub: #FFFFFF; --at-primary-bg: #E4E4E4;
+}
+
+/* CLR-03 · Ink — full inverse */
+[data-clr="CLR-03"] {
+  --at-bg: #0A0A0A; --at-panel: #0A0A0A; --at-sub: #161616;
+  --at-line: #2B2B2B; --at-line-strong: #3A3A3A; --at-line-soft: #1F1F1F;
+  --at-ink: #FFFFFF; --at-body: #A3A3A3; --at-label: #8C8C8C; --at-muted: #6E6E6E; --at-disabled: #474747;
+  --at-primary: #FFFFFF; --at-on-primary: #0A0A0A; --at-navy: #D4D4D4; --at-primary-bg: #1F1F1F;
+  --at-signal: #4A8DE8; --at-signal-bg: #13233B;
+  --at-radius-panel: 0; --at-radius-control: 999px;
+}
+
+/* CLR-04 · Split — ink nav / aside, paper elsewhere */
+[data-clr="CLR-04"] {
+  --at-bg: #FFFFFF; --at-panel: #FFFFFF; --at-sub: #F4F4F4;
+  --at-line: #E4E4E4; --at-line-strong: #D4D4D4; --at-line-soft: #EFEFEF;
+  --at-ink: #0A0A0A; --at-body: #474747; --at-label: #6E6E6E; --at-muted: #8C8C8C; --at-disabled: #BDBDBD;
+  --at-primary: #0A0A0A; --at-on-primary: #FFFFFF; --at-navy: #333333; --at-primary-bg: #F4F4F4;
+  --at-signal: #1C63CD; --at-signal-bg: #E8EFFA;
+  --at-radius-panel: 0; --at-radius-control: 999px;
+}
+[data-clr="CLR-04"] > [data-slot="nav"],
+[data-clr="CLR-04"] > [data-slot="aside"] {
+  --at-bg: #0A0A0A; --at-panel: #0A0A0A; --at-sub: #161616;
+  --at-line: #2B2B2B; --at-line-strong: #3A3A3A; --at-line-soft: #1F1F1F;
+  --at-ink: #FFFFFF; --at-body: #A3A3A3; --at-label: #8C8C8C; --at-muted: #6E6E6E; --at-disabled: #474747;
+  --at-primary: #FFFFFF; --at-on-primary: #0A0A0A; --at-navy: #D4D4D4; --at-primary-bg: #1F1F1F;
+  --at-signal: #4A8DE8; --at-signal-bg: #13233B;
+}
+
+/* CLR-05 · Ink Head — ink header / hero, paper body */
+[data-clr="CLR-05"] {
+  --at-bg: #FFFFFF; --at-panel: #FFFFFF; --at-sub: #F4F4F4;
+  --at-line: #E4E4E4; --at-line-strong: #D4D4D4; --at-line-soft: #EFEFEF;
+  --at-ink: #0A0A0A; --at-body: #474747; --at-label: #6E6E6E; --at-muted: #8C8C8C; --at-disabled: #BDBDBD;
+  --at-primary: #0A0A0A; --at-on-primary: #FFFFFF; --at-navy: #333333; --at-primary-bg: #F4F4F4;
+  --at-signal: #1C63CD; --at-signal-bg: #E8EFFA;
+  --at-radius-panel: 0; --at-radius-control: 999px;
+}
+[data-clr="CLR-05"] > [data-slot="header"],
+[data-clr="CLR-05"] > [data-slot="hero"] {
+  --at-bg: #0A0A0A; --at-panel: #0A0A0A; --at-sub: #161616;
+  --at-line: #2B2B2B; --at-line-strong: #3A3A3A; --at-line-soft: #1F1F1F;
+  --at-ink: #FFFFFF; --at-body: #A3A3A3; --at-label: #8C8C8C; --at-muted: #6E6E6E; --at-disabled: #474747;
+  --at-primary: #FFFFFF; --at-on-primary: #0A0A0A; --at-navy: #D4D4D4; --at-primary-bg: #1F1F1F;
+  --at-signal: #4A8DE8; --at-signal-bg: #13233B;
+}
+
+/* CLR-06 · Calm v3 — legacy migration */
+[data-clr="CLR-06"] {
+  --at-bg: #F3F5F7; --at-panel: #FFFFFF; --at-sub: #FAFAFA;
+  --at-line: #E8E8E8; --at-line-strong: #DFDFDF; --at-line-soft: #EFEFEF;
+  --at-ink: #000000; --at-body: #555555; --at-label: #6E6E6E; --at-muted: #8C8C8C; --at-disabled: #BDBDBD;
+  --at-primary: #1C63CD; --at-on-primary: #FFFFFF; --at-navy: #053266; --at-primary-bg: #E8EFFA;
+  --at-signal: #1C63CD; --at-signal-bg: #E8EFFA;
+  --at-radius-panel: 16px; --at-radius-control: 8px;
+}
+[data-clr="CLR-06"] > [data-slot="header"],
+[data-clr="CLR-06"] > [data-slot="nav"] { --at-bg: #FFFFFF; }
+
+/* a11y.css */
+/* aive template v4.3 · 접근성 — focus-visible 링 + 로딩 스피너 (소프트 섀도 금지 준수: 1px 원호) */
+:where(button,a,input,select,[role="tab"],[tabindex]):focus-visible{
+  outline: none; box-shadow: var(--at-focus-ring);
+}
+@keyframes at-spin { to { transform: rotate(360deg); } }
+.at-spin{ animation: at-spin 600ms linear infinite; }
+@media (prefers-reduced-motion: reduce){ .at-spin{ animation: none; } }
+
+
+*{box-sizing:border-box}
+html,body{margin:0}
+html{scroll-behavior:smooth}
+body{background:var(--at-surface-app);color:var(--at-text-title);font-family:var(--at-font-sans);-webkit-font-smoothing:antialiased;line-height:1.7}
+.mono{font-family:var(--at-font-mono);font-size:var(--at-size-label);letter-spacing:var(--at-tracking-label);text-transform:uppercase;color:var(--at-text-muted)}
+a{color:var(--at-signal);text-decoration:none}
+a:hover{text-decoration:underline}
+:where(a,button,[tabindex]):focus-visible{outline:none;box-shadow:var(--at-focus-ring)}
+code{font-family:var(--at-font-mono);font-size:.86em;background:var(--at-surface-subtle);padding:1px 5px;border-radius:2px;color:var(--at-text-strong)}
+
+/* top bar */
+.bar{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:16px;height:var(--at-gnb-height);
+  padding-left:max(24px,env(safe-area-inset-left,0px));padding-right:max(24px,env(safe-area-inset-right,0px));
+  background:color-mix(in srgb,var(--at-surface-app) 86%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--at-border-default)}
+.brand{font-family:var(--at-font-display);font-weight:800;font-size:18px;letter-spacing:-.02em}
+.brand b{color:var(--at-signal)}
+.bar nav{display:flex;gap:4px;margin-left:8px;overflow:auto}
+.bar nav a{font-family:var(--at-font-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--at-text-muted);padding:6px 9px;white-space:nowrap}
+.bar nav a:hover{color:var(--at-text-title);text-decoration:none}
+.toggle{margin-left:auto;font-family:var(--at-font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;background:transparent;color:var(--at-text-title);border:1px solid var(--at-border-control);height:30px;padding:0 12px;border-radius:999px;cursor:pointer}
+.toggle:hover{border-color:var(--at-signal);color:var(--at-signal)}
+
+.wrap{padding-left:max(24px,env(safe-area-inset-left,0px));padding-right:max(24px,env(safe-area-inset-right,0px));max-width:1080px;margin-inline:auto}
+
+/* hero */
+.hero{padding-block:clamp(44px,8vw,96px);border-bottom:1px solid var(--at-border-default)}
+.eyebrow{display:flex;gap:12px;align-items:center;margin-bottom:24px;flex-wrap:wrap}
+.dot{width:7px;height:7px;border-radius:999px;background:var(--at-signal)}
+.hero h1{font-family:var(--at-font-display);font-weight:900;font-size:clamp(44px,10vw,120px);line-height:.88;letter-spacing:-.045em;margin:0}
+.hero .lede{margin-top:26px;max-width:62ch;font-size:clamp(16px,2.2vw,19px);color:var(--at-text-body);line-height:1.6}
+.eras{margin-top:36px;display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--at-border-default)}
+.eras div{padding:16px 18px;border-right:1px solid var(--at-border-default)}
+.eras div:last-child{border-right:0;background:var(--at-surface-subtle)}
+.eras .yr{font-family:var(--at-font-mono);font-size:11px;color:var(--at-text-muted);letter-spacing:.06em}
+.eras b{display:block;font-family:var(--at-font-display);font-size:21px;font-weight:800;letter-spacing:-.02em;margin:4px 0 6px}
+.eras p{margin:0;font-size:13px;color:var(--at-text-body);line-height:1.55}
+.eras .now b{color:var(--at-signal)}
+
+section.sec{padding-block:clamp(40px,6vw,72px);border-bottom:1px solid var(--at-border-soft);scroll-margin-top:72px}
+.kicker{display:flex;align-items:baseline;gap:14px;margin-bottom:8px}
+.kicker .no{font-family:var(--at-font-mono);font-size:12px;color:var(--at-signal);letter-spacing:.1em}
+h2.st{font-family:var(--at-font-display);font-size:clamp(28px,5vw,52px);letter-spacing:-.03em;line-height:1;margin:0}
+.sublede{color:var(--at-text-body);max-width:64ch;margin:16px 0 28px;font-size:16px}
+.prose{max-width:68ch}
+.prose p{margin:0 0 16px}
+.prose ul{margin:0 0 16px;padding-left:20px}
+.prose li{margin:5px 0;color:var(--at-text-body)}
+.prose li b{color:var(--at-text-title)}
+h3.sh{font-family:var(--at-font-display);font-size:19px;font-weight:800;letter-spacing:-.01em;margin:26px 0 10px}
+
+/* grid of cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1px;background:var(--at-border-default);border:1px solid var(--at-border-default);margin:8px 0 4px}
+.cards>div{background:var(--at-surface-card);padding:20px 18px}
+.cards .t{font-family:var(--at-font-mono);font-size:11px;color:var(--at-signal);letter-spacing:.06em;text-transform:uppercase}
+.cards h4{font-family:var(--at-font-display);font-size:17px;margin:10px 0 7px;letter-spacing:-.01em}
+.cards p{margin:0;font-size:13px;color:var(--at-text-body);line-height:1.55}
+.cards code{font-size:11px}
+
+table{border-collapse:collapse;width:100%;font-size:14px;margin:4px 0}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--at-border-soft);vertical-align:top}
+th{font-family:var(--at-font-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--at-text-muted);font-weight:500}
+td b{color:var(--at-text-title)}
+.tablewrap{overflow-x:auto}
+
+.loop{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:6px 0 10px}
+.loop span{font-family:var(--at-font-mono);font-size:12px;border:1px solid var(--at-border-control);border-radius:999px;padding:6px 13px;color:var(--at-text-body)}
+.loop span.v{border-color:var(--at-signal);color:var(--at-signal)}
+.loop em{color:var(--at-text-muted);font-style:normal}
+
+.callout{border-left:2px solid var(--at-signal);background:var(--at-surface-subtle);padding:14px 18px;margin:8px 0 4px;font-size:14px;color:var(--at-text-body)}
+.callout b{color:var(--at-text-title)}
+
+.tl{list-style:none;padding:0;margin:0}
+.tl li{display:flex;gap:16px;padding:9px 0;border-bottom:1px solid var(--at-border-soft);font-size:14px}
+.tl .d{font-family:var(--at-font-mono);font-size:11px;color:var(--at-signal);flex:0 0 96px;letter-spacing:.04em;padding-top:2px}
+.tl .x{color:var(--at-text-body);min-width:0}
+
+footer{padding-block:48px}
+footer .src{font-size:12.5px;color:var(--at-text-muted);line-height:1.9}
+footer .big{font-family:var(--at-font-display);font-weight:900;font-size:clamp(32px,8vw,88px);letter-spacing:-.045em;line-height:.9;margin:0 0 24px}
+
+@media (max-width:760px){
+  .eras{grid-template-columns:1fr}
+  .eras div{border-right:0;border-bottom:1px solid var(--at-border-default)}
+  .bar nav{display:none}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<header class="bar">
+  <span class="brand">a<b>i</b>ve · field notes</span>
+  <nav>
+    <a href="#eras">Eras</a><a href="#llm">LLM</a><a href="#harness">Harness</a>
+    <a href="#agents">Sub-agents</a><a href="#loop">Loop</a><a href="#memory">Memory</a>
+    <a href="#mcp">MCP</a><a href="#verify">Verify</a>
+  </nav>
+  <button class="toggle" id="themeBtn" aria-label="테마 전환">INK / PAPER</button>
+</header>
+
+<main>
+<div class="wrap">
+
+<section class="hero" id="top">
+  <div class="eyebrow"><span class="dot"></span><span class="mono">Agent Engineering · 2026 Field Notes</span></div>
+  <h1>모델이 아니라<br>하네스가<br>차이를 만든다.</h1>
+  <p class="lede">프런티어 모델들의 벤치마크 점수가 수렴한 2026년, 성능의 차이는 모델 선택이 아니라 <b>모델을 둘러싼 시스템</b>에서 난다. 프롬프트 → 컨텍스트 → 하네스로 이동해 온 설계의 초점을, LLM 구조·서브에이전트·루프·메모리·검증 관점에서 정리한다.</p>
+  <div class="eras" id="eras">
+    <div><span class="yr">2022–2024</span><b>Prompt</b><p>작업 단위 = 한 메시지. 역할·지시·형식·예시를 한 턴 안에서 다듬는다.</p></div>
+    <div><span class="yr">2025</span><b>Context</b><p>작업 단위 = 창에 무엇을 넣는가. 유한한 "주의 예산"에 맞춰 문서·도구·메모리·이전 턴을 큐레이션한다.</p></div>
+    <div class="now"><span class="yr">2026</span><b>Harness</b><p>작업 단위 = 모델을 둘러싼 시스템. 규칙·도구·검증·위임을 영속 구조로 쌓는다. <code>Agent = Model + Harness</code>.</p></div>
+  </div>
+</section>
+
+<section class="sec" id="llm">
+  <div class="kicker"><span class="no">01</span></div>
+  <h2 class="st">LLM 구조</h2>
+  <p class="sublede">에이전트의 심장은 여전히 디코더 트랜스포머다. 중요한 건 그 한계를 아는 것.</p>
+  <div class="prose">
+    <ul>
+      <li><b>디코더 트랜스포머</b> — 다음 토큰을 자기회귀로 예측. 모든 "추론"은 이 한 메커니즘 위에서 일어난다.</li>
+      <li><b>컨텍스트 창 = 유한한 주의 예산</b> — 창이 길어도 토큰이 많아질수록 주의가 희석된다("lost in the middle"). 길이는 자원이지 공짜가 아니다.</li>
+      <li><b>토크나이저</b> — 한국어·코드는 토큰 효율이 영어보다 낮다. 비용·지연·창 점유가 언어마다 다르다.</li>
+      <li><b>추론(thinking) 토큰</b> — 답 이전에 사고를 토큰으로 "펼치면" 어려운 과제 정확도가 오른다. 대신 토큰·지연을 쓴다.</li>
+      <li><b>도구 호출</b> — 모델은 함수 스키마를 받고 호출을 생성할 뿐, 실행은 하네스가 한다. 모델의 세계 접점은 전부 이 경계를 지난다.</li>
+    </ul>
+  </div>
+  <div class="callout"><b>설계 함의:</b> 모델은 상태가 없다. 기억·도구·검증·지속성은 전부 바깥(하네스)에서 온다. "더 똑똑한 모델"보다 "더 좋은 창 구성"이 먼저다.</div>
+</section>
+
+<section class="sec" id="harness">
+  <div class="kicker"><span class="no">02</span></div>
+  <h2 class="st">하네스</h2>
+  <p class="sublede">Agent = Model + Harness. 하네스가 없으면 챗봇, 있으면 같은 모델이 다단계 작업을 해낸다.</p>
+  <div class="cards">
+    <div><div class="t">Personalization</div><h4>전역 기본값</h4><p>목소리·기본 규칙. <code>~/.claude/CLAUDE.md</code></p></div>
+    <div><div class="t">Context</div><h4>프로젝트 맥락</h4><p>해당 저장소의 톤·형식·참조. <code>./CLAUDE.md</code></p></div>
+    <div><div class="t">Action</div><h4>도구·커넥터</h4><p>읽기/쓰기 연결(Git·메일·문서)을 MCP 서버로.</p></div>
+    <div><div class="t">Memory</div><h4>세션 간 교정</h4><p>매번 다시 로드되는 수정 사항. <code>memory/*.md</code></p></div>
+    <div><div class="t">Delegation</div><h4>전문 서브에이전트</h4><p>역할·모델이 다른 작업자. <code>agents/*.md</code></p></div>
+  </div>
+  <div class="callout"><b>핵심 루틴:</b> 에이전트의 실수 하나하나를 <b>영속 규칙이나 도구</b>로 바꿔 재발을 막는다. 규칙은 <code>AGENTS.md</code>류 파일에, 뒤엔 <b>검증 스크립트</b>가 받친다. 하네스는 점점 깊어지고, 모델 교체 비용은 낮아진다.</div>
+</section>
+
+<section class="sec" id="agents">
+  <div class="kicker"><span class="no">03</span></div>
+  <h2 class="st">서브에이전트</h2>
+  <p class="sublede">Orchestrator-Workers — 런타임에 계획을 세우고, 독립 하위작업을 전문 작업자에 위임하고, 요약만 합친다.</p>
+  <div class="prose">
+    <h3 class="sh">쓸 때 / 쓰지 말 때</h3>
+    <ul>
+      <li><b>쓴다</b> — 하위작업 수가 입력에 따라 달라질 때(예: 파일 수가 요청마다 다른 코딩 과제).</li>
+      <li><b>쓰지 않는다</b> — 잘 좁힌 단일 에이전트로 끝나면 그걸 쓴다. 작업자마다 LLM 호출의 지연·비용·실패가 붙는다. <b>기본값은 "쓰지 않음".</b></li>
+    </ul>
+    <h3 class="sh">설계 규칙</h3>
+    <ul>
+      <li><b>컨텍스트 격리가 핵심</b> — 작업자는 자기 창에서 돌고 <b>요약만</b> 반환한다. 전체 로그를 올리면 오케스트레이터 창이 넘쳐 멈춘다. 다시 전문을 읽기 시작하면 격리가 깨진 것.</li>
+      <li><b>한 작업자 = 한 책임</b> — 한 구절로 역할을 못 적으면 쪼갠다.</li>
+      <li><b>원샷</b> — 작업자는 받은 범위만 처리하고 끝. 오케스트레이터로 되돌아 호출하지 않는다.</li>
+      <li><b>얕게</b> — 중첩은 2단계가 실용적 상한. 각 호출에 타임아웃·실패 처리.</li>
+      <li><b>강한 오케스트레이터 + 작은 작업자</b> — 계획·종합은 큰 모델, 좁은 작업은 작은 모델.</li>
+      <li><b>주 실패 모드는 작업자가 아니라 계획</b> — 틀린 계획이 모든 작업자로 번진다. 출력이 이상하면 <b>계획부터</b> 본다(계획·디스패치·요약을 로깅).</li>
+    </ul>
+  </div>
+</section>
+
+<section class="sec" id="loop">
+  <div class="kicker"><span class="no">04</span></div>
+  <h2 class="st">루프 엔지니어링</h2>
+  <p class="sublede">에이전트를 "스스로 도는 루프"로 만든다 — 관찰·계획·실행·검증·학습이 게이트로 묶인 순환.</p>
+  <div class="loop">
+    <span>Task</span><em>→</em><span>Plan</span><em>→</em><span>Act</span><em>→</em><span class="v">Verify (gate)</span><em>→</em><span>Evaluate</span><em>→</em><span>Learn</span><em>↺</em>
+  </div>
+  <div class="prose">
+    <ul>
+      <li><b>게이트가 제어한다</b> — 다음 단계로 넘어갈지는 모델의 판단이 아니라 검증 결과(테스트·오라클·리뷰 통과)가 정한다. 통과 못 한 산출물은 넘기지 않는다.</li>
+      <li><b>실패는 학습 데이터</b> — 실패를 지우지 말고 기록·분석해 다음 전략으로 재시도. 같은 실수가 규칙/도구로 굳는다(하네스가 깊어지는 통로).</li>
+      <li><b>eval 주도</b> — 바이브가 아니라 측정으로 전진. 고정 평가셋 + 회귀 + fitness로 전략 변화를 승격/기각.</li>
+      <li><b>DAG 오케스트레이션</b> — 제어 흐름(다음 노드·재시도·롤백)을 모델에 맡기지 않고 그래프로 고정하면 재현성이 생긴다.</li>
+      <li><b>정지 조건</b> — 무한 루프 방지: 재시도 상한, 비용/토큰 예산, 되돌릴 수 없는 작업 앞에서의 사람 확인.</li>
+    </ul>
+  </div>
+  <div class="callout"><b>성숙도 신호:</b> "프롬프트를 고친다"에서 "루프와 평가를 고친다"로 작업이 옮겨가면, 그 팀은 harness 시대에 들어선 것이다.</div>
+</section>
+
+<section class="sec" id="memory">
+  <div class="kicker"><span class="no">05</span></div>
+  <h2 class="st">메모리 아키텍처</h2>
+  <p class="sublede">모델은 상태가 없다. 지속성은 계층으로 설계한다.</p>
+  <div class="tablewrap"><table>
+    <thead><tr><th>계층</th><th>담는 것</th><th>수명 / 위치</th></tr></thead>
+    <tbody>
+      <tr><td><b>Short-term</b></td><td>현재 작업 컨텍스트·노드·재시도 횟수</td><td>세션/상태 파일</td></tr>
+      <tr><td><b>Episodic</b></td><td>성공·실패 사례(노드·전략·원인·수정)</td><td>append 로그</td></tr>
+      <tr><td><b>Semantic</b></td><td>검증된 장기 지식·규칙</td><td>검증 후 기록</td></tr>
+      <tr><td><b>Evolution</b></td><td>전략 버전과 성능(fitness)</td><td>사이클마다</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout">메모리는 "대화 기록 저장"이 아니라 <b>다음 세션의 행동을 바꾸는 교정</b>이다. 재로딩되는 규칙 + 인덱스가 핵심. 저장 데이터는 지시가 아니라 데이터로 다룬다(주입 방어).</div>
+</section>
+
+<section class="sec" id="mcp">
+  <div class="kicker"><span class="no">06</span></div>
+  <h2 class="st">MCP · 도구 계층</h2>
+  <p class="sublede">Model Context Protocol — 모델↔도구 연결의 공통 표준. N×M 커넥터 문제를 N+M으로.</p>
+  <div class="prose">
+    <h3 class="sh">3가지 프리미티브</h3>
+    <ul>
+      <li><b>Tools</b> — 모델이 하는 행동(쓰기 측). 호스트 설정에 따라 사용자가 승인/거부.</li>
+      <li><b>Resources</b> — 모델이 읽는 데이터(파일·레코드·문서).</li>
+      <li><b>Prompts</b> — 특정 작업을 표준화하는 재사용 템플릿.</li>
+    </ul>
+    <p>전송은 로컬 <code>stdio</code>와 원격 <code>Streamable HTTP</code>(SSE), 와이어 포맷은 JSON-RPC 2.0. 원격 인증은 OAuth 2.1(PKCE). MCP는 API를 대체하지 않고 그 위의 <b>발견·호출 계층</b>이다.</p>
+  </div>
+  <h3 class="sh">2026 타임라인</h3>
+  <ul class="tl">
+    <li><span class="d">2024-11</span><span class="x">Anthropic이 MCP 오픈소스로 공개.</span></li>
+    <li><span class="d">2025-03</span><span class="x">스펙 v2: Streamable HTTP + OAuth 2.1. 같은 날 OpenAI 지원 발표.</span></li>
+    <li><span class="d">2025-11</span><span class="x">최대 규모 스펙 업데이트: 비동기 Tasks·Elicitation·서버측 에이전트 루프·CIMD.</span></li>
+    <li><span class="d">2025-12</span><span class="x">MCP가 Linux Foundation 산하 Agentic AI Foundation으로 기증(OpenAI·Block 공동 창립).</span></li>
+    <li><span class="d">2026-01</span><span class="x">MCP Apps 공개 — 대화형 UI를 붙이는 첫 공식 확장.</span></li>
+    <li><span class="d">2026-03</span><span class="x">2026 로드맵: 엔터프라이즈 준비(감사·게이트웨이·설정 이식성) 우선.</span></li>
+  </ul>
+  <div class="callout">Claude·ChatGPT·Gemini·Copilot·Cursor·VS Code·Zed가 클라이언트로, Slack·GitHub·Salesforce·Stripe·Notion 등에 서버가 있다. Python·TS SDK 합계 월 다운로드 약 9,700만 추정.</div>
+</section>
+
+<section class="sec" id="verify">
+  <div class="kicker"><span class="no">07</span></div>
+  <h2 class="st">검증</h2>
+  <p class="sublede">에이전트에서 가장 모자란 조각. 확률적 출력을 결정적 관문으로 묶는다.</p>
+  <div class="prose">
+    <ul>
+      <li><b>결정적 오라클</b> — 가능한 곳은 참조 구현·테스트·재현 명령으로 "정답"을 만들고 대조한다. 바이트/수치 일치가 최고의 검증.</li>
+      <li><b>환각 차단</b> — 외부 사실(라이선스·API·동작)은 출처 URL 또는 재현 테스트 없이 설계 근거로 쓰지 않는다. 근거 없는 주장은 가정으로 분리.</li>
+      <li><b>관찰/추론/미지 분리</b> — 결론마다 증거 ID를 달고, 확인 못 한 것은 미지로 남긴다.</li>
+      <li><b>LLM-as-judge는 보조</b> — 판정자도 틀린다. 가능하면 결정적 검사를 1순위, 판정 모델은 2순위.</li>
+      <li><b>10th Man</b> — 주계획에 구조화된 반론을 강제로 붙여 다양한 시각을 확보(적대적 리뷰를 선택이 아닌 규율로).</li>
+    </ul>
+  </div>
+</section>
+
+</div>
+<footer><div class="wrap">
+  <p class="big">model + <span style="color:var(--at-signal)">harness</span>.</p>
+  <div class="src">
+    출처 — 
+    <a href="https://mer.vin/2026/06/prompt-vs-context-vs-harness-engineering-three-ai-eras-explained-2026/">Prompt vs Context vs Harness Engineering (2026)</a> ·
+    <a href="https://vantaige.io/blog/orchestrator-workers-multi-agent-pattern-2026">Orchestrator-Workers Pattern (2026)</a> ·
+    <a href="https://workos.com/blog/everything-your-team-needs-to-know-about-mcp-in-2026">MCP in 2026 — WorkOS</a> ·
+    <a href="https://www.requesty.ai/blog/loop-engineering-how-to-build-ai-agent-loops-that-run-themselves">Loop Engineering — Requesty</a> ·
+    <a href="https://arxiv.org/pdf/2609.00006">Harness Engineering: Anatomy of Coding Agents (arXiv)</a><br>
+    aive template v4.3 · Editorial Mono · 작성 2026-10-26 · 지식 일부는 검색으로 갱신(모델 컷오프 2026-01).
+  </div>
+</div></footer>
+</main>
+
+<script>
+(function(){
+  "use strict";
+  var root=document.documentElement;
+  try{var s=localStorage.getItem("aive-theme"); if(s)root.setAttribute("data-at-theme",s);}catch(e){}
+  document.getElementById("themeBtn").addEventListener("click",function(){
+    var cur=root.getAttribute("data-at-theme");
+    var dark=cur?cur==="ink":(window.matchMedia&&matchMedia("(prefers-color-scheme:dark)").matches);
+    var next=dark?"paper":"ink";
+    root.setAttribute("data-at-theme",next);
+    try{localStorage.setItem("aive-theme",next);}catch(e){}
+  });
+})();
+</script>
+</body>
 </html>
